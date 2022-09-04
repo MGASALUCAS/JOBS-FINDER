@@ -1,0 +1,40 @@
+{% extends "authentication/base.html" %}
+
+{% block title %}
+    Chat
+{% endblock %}
+
+{% block main %}
+    <h1>{{ profile1.name }} applied to {{ job.title }}</h1>
+    <p>This page will automatically reload every 5 minute to ensure you get the most recent messages sent.</p>
+    {% for m in messages %}
+        {% if m.from_id != request.user.id %}
+            <div>
+                {{ m.timestamp }} <br>
+                <b>{{ profile1.name }}</b>: <br>
+                {{ m.message|safe }}
+            </div>
+        {% else %}
+            <div>
+                {{ m.timestamp }} <br>
+                <b>{{ profile2.name }}</b>: <br>
+                {{ m.message|safe }}
+            </div>
+        {% endif %}
+        <br>
+    {% endfor %}
+    <hr>
+    <h3>Send a message to {{ profile1.name }}</h3>
+    <form method="POST">
+        {% csrf_token %}
+        <div>
+            <textarea cols="100" rows="10" name="message"></textarea>
+        </div>
+        <button type="submit" class="btn btn-primary">Submit</button>
+    </form>
+    <script>
+        setTimeout(() => {
+            location.reload();
+        }, 50000);
+    </script>
+{% endblock %}
